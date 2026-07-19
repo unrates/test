@@ -1,4 +1,4 @@
--- Vision Hub/main.lua
+-- Xena Hub/main.lua
 -- sexy script by github.com/orialdev
 -- please give credit if you use anything from my code
 
@@ -12,18 +12,18 @@ local WindUI = loadstring(game:HttpGet("https://raw.githubusercontent.com/KevinS
 
 local queue_on_teleport = queue_on_teleport or (syn and syn.queue_on_teleport) or (fluxus and fluxus.queue_on_teleport) or function(...) end
 
-if getgenv().VisionHub_Connections then
-    for i, conn in pairs(getgenv().VisionHub_Connections) do
+if getgenv().XenaHub_Connections then
+    for i, conn in pairs(getgenv().XenaHub_Connections) do
         if conn then
             pcall(function() conn:Disconnect() end)
         end
-        getgenv().VisionHub_Connections[i] = nil
+        getgenv().XenaHub_Connections[i] = nil
     end
 end
-getgenv().VisionHub_Connections = {}
+getgenv().XenaHub_Connections = {}
 
 for _, gui in ipairs(CoreGui:GetChildren()) do
-    if gui.Name == "Vision Hub" or gui.Name == "VisionESP" or string.match(gui.Name, "^VisionBtn_") or gui.Name == "VisionTimerGUI" then
+    if gui.Name == "Xena Hub" or gui.Name == "XenaESP" or string.match(gui.Name, "^XenaBtn_") or gui.Name == "XenaTimerGUI" or gui.Name == "XenaAimlockIndicator" then
         gui:Destroy()
     end
 end
@@ -31,7 +31,7 @@ end
 for _, player in ipairs(Players:GetPlayers()) do
     if player.Character then
         local artifacts = {
-            player.Character:FindFirstChild("VisionHighlight"),
+            player.Character:FindFirstChild("XenaHighlight"),
             player.Character:FindFirstChild("Head") and player.Character.Head:FindFirstChild("NameESP")
         }
         for _, artifact in ipairs(artifacts) do
@@ -41,7 +41,7 @@ for _, player in ipairs(Players:GetPlayers()) do
 end
 
 for _, obj in ipairs(Workspace:GetDescendants()) do
-    if obj.Name == "VisionGunHighlight" or obj.Name == "VisionGunLabel" then
+    if obj.Name == "XenaGunHighlight" or obj.Name == "XenaGunLabel" then
         obj:Destroy()
     end
 end
@@ -56,7 +56,7 @@ if getgenv().FPDH then
 end
 
 local function AddConnection(conn)
-    local connections = getgenv().VisionHub_Connections
+    local connections = getgenv().XenaHub_Connections
     for i = #connections, 1, -1 do
         local c = connections[i]
         if not c or not c.Connected then
@@ -127,6 +127,9 @@ Modules.Config = {
     NotifyMurderer = false,
     NotifySheriff = false,
     NotifyGunDropped = false,
+
+    Aimlock = false,
+    AimlockSmoothing = 0.6,
 
     ButtonsLocked = false
 }
@@ -718,13 +721,28 @@ function Modules.ShootMurdererOnce()
     local gun = localplayer.Character and localplayer.Character:FindFirstChild("Gun")
     if not gun then return end
 
-    local knifeLocal = gun:FindFirstChild("KnifeLocal")
-    local createBeam = knifeLocal and knifeLocal:FindFirstChild("CreateBeam")
-    local rf = createBeam and createBeam:FindFirstChild("RemoteFunction")
-    if gun and knifeLocal and createBeam and rf and typeof(rf.InvokeServer) == "function" then
-        local predPos = Modules.getPredictedPosition(target)
+    local predPos = Modules.getPredictedPosition(target)
+    
+    local rs = game:GetService("ReplicatedStorage")
+    local shootRemote = nil
+    
+    if rs:FindFirstChild("Remotes") and rs.Remotes:FindFirstChild("Weapon") and rs.Remotes.Weapon:FindFirstChild("Shoot") then
+        shootRemote = rs.Remotes.Weapon.Shoot
+    elseif rs:FindFirstChild("ShootWeapon", true) then
+        shootRemote = rs:FindFirstChild("ShootWeapon", true)
+    end
+    
+    if shootRemote then
         pcall(function()
-            rf:InvokeServer(1, predPos, "AH2")
+            if shootRemote:IsA("RemoteEvent") then
+                shootRemote:FireServer(1, predPos, "AH2")
+            elseif shootRemote:IsA("RemoteFunction") then
+                shootRemote:InvokeServer(1, predPos, "AH2")
+            end
+        end)
+    else
+        pcall(function()
+            gun:Activate()
         end)
     end
 end
@@ -1240,7 +1258,7 @@ function Modules.ChatRoles()
     local mName = murderer and murderer.Name or "Unknown"
     local sName = sheriff and sheriff.Name or "Unknown"
     
-    local msg = "Vision Hub >> Murderer: " .. mName .. " | Sheriff: " .. sName
+    local msg = "Xena Hub >> Murderer: " .. mName .. " | Sheriff: " .. sName
     
     if TextChatService.ChatVersion == Enum.ChatVersion.TextChatService then
         local chan = TextChatService:FindFirstChild("TextChannels")
@@ -1286,7 +1304,7 @@ do
         end
 
         timerGui = Instance.new("ScreenGui")
-        timerGui.Name = "VisionTimerGUI"
+        timerGui.Name = "XenaTimerGUI"
         timerGui.ResetOnSpawn = false
         timerGui.IgnoreGuiInset = true
         timerGui.Parent = CoreGui
@@ -1387,6 +1405,291 @@ do
     end
 end
 
+-- ============================================================
+-- AIMLOCK MODULE — by Fox
+-- smart target acquisition + smooth camera lerp + mobile button
+-- ============================================================
+do
+    local aimlockConn = nil
+    local aimlockIndicator = nil
+    local currentTarget = nil
+
+    local function getAimlockTarget()
+        local myRoot = Modules.RootPart
+        if not myRoot then return nil end
+
+        local murderer = Modules.FindMurderer()
+        local isMurderer = (murderer == Modules.Player)
+
+        if not isMurderer and murderer and murderer.Character then
+            local hrp = murderer.Character:FindFirstChild("HumanoidRootPart")
+            local hum = murderer.Character:FindFirstChildOfClass("Humanoid")
+            if hrp and hum and hum.Health > 0 then
+                return murderer
+            end
+        end
+
+        local closest = nil
+        local closestDist = math.huge
+
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= Modules.Player and plr.Character then
+                local hrp = plr.Character:FindFirstChild("HumanoidRootPart")
+                local hum = plr.Character:FindFirstChildOfClass("Humanoid")
+                if hrp and hum and hum.Health > 0 then
+                    local dist = (hrp.Position - myRoot.Position).Magnitude
+                    if dist < closestDist then
+                        closestDist = dist
+                        closest = plr
+                    end
+                end
+            end
+        end
+        return closest
+    end
+
+    local function createIndicator()
+        if aimlockIndicator then
+            pcall(function() aimlockIndicator:Destroy() end)
+        end
+
+        local gui = Instance.new("ScreenGui")
+        gui.Name = "XenaAimlockIndicator"
+        gui.ResetOnSpawn = false
+        gui.IgnoreGuiInset = true
+        gui.DisplayOrder = 999
+        gui.Parent = CoreGui
+
+        local dot = Instance.new("Frame")
+        dot.Name = "Dot"
+        dot.Size = UDim2.fromOffset(12, 12)
+        dot.Position = UDim2.fromScale(0.5, 0.5)
+        dot.AnchorPoint = Vector2.new(0.5, 0.5)
+        dot.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+        dot.BorderSizePixel = 0
+        dot.Parent = gui
+
+        local corner = Instance.new("UICorner")
+        corner.CornerRadius = UDim.new(1, 0)
+        corner.Parent = dot
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.fromRGB(255, 255, 255)
+        stroke.Thickness = 1.5
+        stroke.Parent = dot
+
+        local label = Instance.new("TextLabel")
+        label.Name = "TargetLabel"
+        label.Size = UDim2.fromOffset(200, 20)
+        label.Position = UDim2.new(0.5, 0, 0.5, 14)
+        label.AnchorPoint = Vector2.new(0.5, 0)
+        label.BackgroundTransparency = 1
+        label.Font = Enum.Font.GothamBold
+        label.TextSize = 12
+        label.TextColor3 = Color3.fromRGB(255, 80, 80)
+        label.TextStrokeColor3 = Color3.new(0, 0, 0)
+        label.TextStrokeTransparency = 0
+        label.Text = ""
+        label.Parent = gui
+
+        aimlockIndicator = gui
+        return gui
+    end
+
+    local function destroyIndicator()
+        if aimlockIndicator then
+            pcall(function() aimlockIndicator:Destroy() end)
+            aimlockIndicator = nil
+        end
+    end
+
+    local function updateIndicator(target)
+        if not aimlockIndicator then return end
+        local label = aimlockIndicator:FindFirstChild("TargetLabel", true)
+        local dot = aimlockIndicator:FindFirstChild("Dot", true)
+        if not label or not dot then return end
+
+        if target and target.Character then
+            label.Text = "⊕ " .. target.Name
+            dot.BackgroundColor3 = Color3.fromRGB(255, 50, 50)
+        else
+            label.Text = "NO TARGET"
+            dot.BackgroundColor3 = Color3.fromRGB(100, 100, 100)
+        end
+    end
+
+    function Modules.ToggleAimlock(enable)
+        Modules.Config.Aimlock = enable
+
+        if aimlockConn then
+            aimlockConn:Disconnect()
+            aimlockConn = nil
+        end
+
+        if not enable then
+            currentTarget = nil
+            destroyIndicator()
+            return
+        end
+
+        createIndicator()
+
+        aimlockConn = AddConnection(RunService.RenderStepped:Connect(function()
+            if not Modules.Config.Aimlock then return end
+            if not Modules.Character or not Modules.RootPart then return end
+
+            local camera = Workspace.CurrentCamera
+            if not camera then return end
+
+            local target = getAimlockTarget()
+            currentTarget = target
+            updateIndicator(target)
+
+            if not target or not target.Character then return end
+
+            local aimPart = target.Character:FindFirstChild("Head")
+                or target.Character:FindFirstChild("HumanoidRootPart")
+                or target.Character.PrimaryPart
+            if not aimPart then return end
+
+            local vel = aimPart.AssemblyLinearVelocity or aimPart.Velocity or Vector3.zero
+            local ping = 0
+            pcall(function()
+                ping = Modules.Player:GetNetworkPing() or 0
+            end)
+            if ping > 1 then ping = ping / 1000 end
+
+            local leadTime = 0.03 + ping
+            local predictedPos = aimPart.Position + vel * leadTime
+
+            local camPos = camera.CFrame.Position
+            local targetCF = CFrame.lookAt(camPos, predictedPos)
+
+            local smoothing = math.clamp(Modules.Config.AimlockSmoothing, 0.1, 1.0)
+            camera.CFrame = camera.CFrame:Lerp(targetCF, smoothing)
+        end))
+    end
+
+    function Modules.CreateAimlockButton()
+        local btnId = "Aimlock"
+
+        if Modules.MobileButtons[btnId] then
+            pcall(function() Modules.MobileButtons[btnId]:Destroy() end)
+            Modules.MobileButtons[btnId] = nil
+        end
+
+        local screenGui = Instance.new("ScreenGui")
+        screenGui.Name = "XenaBtn_Aimlock"
+        screenGui.Parent = CoreGui
+        screenGui.ResetOnSpawn = false
+        screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
+
+        Modules.MobileButtons[btnId] = screenGui
+
+        local btn = Instance.new("TextButton")
+        btn.Name = "CamlockBtn"
+        btn.Text = "Camlock"
+        btn.TextColor3 = Color3.fromHex("#E6F7FF")
+        btn.TextScaled = true
+        btn.Font = Enum.Font.GothamBold
+        btn.Size = UDim2.fromOffset(80, 45)
+        btn.Position = UDim2.new(0.9, -40, 0.35, 0)
+        btn.BackgroundColor3 = Color3.fromHex("#09202B")
+        btn.BackgroundTransparency = 0.3
+        btn.AutoButtonColor = true
+        btn.Parent = screenGui
+
+        local uiCorner = Instance.new("UICorner")
+        uiCorner.CornerRadius = UDim.new(1, 0)
+        uiCorner.Parent = btn
+
+        local stroke = Instance.new("UIStroke")
+        stroke.Color = Color3.fromHex("#FF3333")
+        stroke.Thickness = 2.5
+        stroke.ApplyStrokeMode = Enum.ApplyStrokeMode.Border
+        stroke.Parent = btn
+
+        local dragging = false
+        local dragStart, startPos
+        local hasMoved = false
+
+        btn.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = true
+                hasMoved = false
+                dragStart = input.Position
+                startPos = btn.Position
+            end
+        end)
+
+        btn.InputChanged:Connect(function(input)
+            if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                if Modules.Config.ButtonsLocked then return end
+                local delta = input.Position - dragStart
+                if delta.Magnitude > 3 then hasMoved = true end
+
+                local vpSize = Workspace.CurrentCamera.ViewportSize
+                local startX = startPos.X.Scale * vpSize.X + startPos.X.Offset
+                local startY = startPos.Y.Scale * vpSize.Y + startPos.Y.Offset
+                local newX = startX + delta.X
+                local newY = startY + delta.Y
+                btn.Position = UDim2.fromOffset(
+                    math.clamp(newX, 0, vpSize.X - btn.AbsoluteSize.X),
+                    math.clamp(newY, 0, vpSize.Y - btn.AbsoluteSize.Y)
+                )
+            end
+        end)
+
+        UserInputService.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+                dragging = false
+            end
+        end)
+
+        btn.MouseButton1Click:Connect(function()
+            if hasMoved then return end
+
+            Modules.Config.Aimlock = not Modules.Config.Aimlock
+            Modules.ToggleAimlock(Modules.Config.Aimlock)
+
+            if Modules.Config.Aimlock then
+                btn.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
+                btn.BackgroundTransparency = 0.15
+                stroke.Color = Color3.fromRGB(255, 80, 80)
+
+                pcall(function()
+                    WindUI:Notify({
+                        Title = "Aimlock ON",
+                        Content = "Locking onto target.",
+                        Icon = "crosshair",
+                        Duration = 2,
+                        TitleColor = Color3.fromRGB(255, 80, 80),
+                        BackgroundColor = Color3.fromHex("#030407"),
+                        CloseButtonColor = Color3.fromHex("#FF3333"),
+                    })
+                end)
+            else
+                btn.BackgroundColor3 = Color3.fromHex("#09202B")
+                btn.BackgroundTransparency = 0.3
+                stroke.Color = Color3.fromHex("#FF3333")
+
+                pcall(function()
+                    WindUI:Notify({
+                        Title = "Aimlock OFF",
+                        Content = "Released target.",
+                        Icon = "crosshair",
+                        Duration = 2,
+                        TitleColor = Color3.fromHex("#E6F7FF"),
+                        BackgroundColor = Color3.fromHex("#030407"),
+                        CloseButtonColor = Color3.fromHex("#00BFFF"),
+                    })
+                end)
+            end
+        end)
+    end
+end
+-- ============================================================
+
 do
     function Modules.CreateGuiButton(id, settings, callback)
         if Modules.MobileButtons[id] then
@@ -1397,7 +1700,7 @@ do
         if not settings.Enabled then return end
 
         local screenGui = Instance.new("ScreenGui")
-        screenGui.Name = "VisionBtn_" .. id
+        screenGui.Name = "XenaBtn_" .. id
         screenGui.Parent = CoreGui
         screenGui.ResetOnSpawn = false
         screenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
@@ -1499,26 +1802,26 @@ end
 WindUI:AddTheme({
     Name = "Default",
     
-    Accent = Color3.fromHex("#00BFFF"),
-    Dialog = Color3.fromHex("#071021"),
-    Outline = Color3.fromHex("#BFEFFF"),
-    Text = Color3.fromHex("#E6F7FF"),
-    Placeholder = Color3.fromHex("#6F8892"),
-    Background = Color3.fromHex("#030407"),
-    Button = Color3.fromHex("#09202B"),
-    Icon = Color3.fromHex("#89F7FF")
+    Accent = Color3.fromHex("#FF0000"),
+    Dialog = Color3.fromHex("#0A0000"),
+    Outline = Color3.fromHex("#440000"),
+    Text = Color3.fromHex("#FFFFFF"),
+    Placeholder = Color3.fromHex("#888888"),
+    Background = Color3.fromHex("#000000"),
+    Button = Color3.fromHex("#110000"),
+    Icon = Color3.fromHex("#FF3333")
 })
 
 local Window = WindUI:CreateWindow({
-    Title = "Vision Hub",
+    Title = "Xena Hub",
     Author = "by orialdev",
-    Folder = "VisionHub",
+    Folder = "XenaHub",
     Theme = "Default",
     Icon = "https://raw.githubusercontent.com/orialdev2/Vision-Hub/refs/heads/main/Vision_Logo1.png",
     IconSize = 50,
     NewElements = true,
     OpenButton = {
-        Title = "Vision Hub",
+        Title = "Xena Hub",
         CornerRadius = UDim.new(1, 0),
         StrokeThickness = 3,
         Enabled = true,
@@ -1580,8 +1883,8 @@ local Settings = Window:Tab({
 
 
 Main:Paragraph({
-    Title = "Welcome to Vision Hub!",
-    Desc = "Thanks for using Vision Hub, Join our Discord for support and updates.",
+    Title = "Welcome to Xena Hub!",
+    Desc = "Thanks for using Xena Hub, Join our Discord for support and updates.",
     Thumbnail = "https://raw.githubusercontent.com/orialdev2/Vision-Hub/refs/heads/main/Vision.png",
     ThumbnailSize = 160,
             Buttons = {
@@ -1611,7 +1914,7 @@ Main:Space()
 Main:Code({
     Title = "Changelog 1.8.0",
     Code = [[
-[VisionHub]
+[XenaHub]
 + 1.8.0 released!
 
 + Fully rewritten codebase
@@ -1773,6 +2076,27 @@ do
         Callback = Modules.ToggleAntiFling
     })
 
+    CombatSection.General:Space()
+
+    CombatSection.General:Toggle({
+        Title = "Aimlock",
+        Desc = "Lock camera onto target",
+        Flag = "AimlockToggle",
+        Callback = function(v)
+            Modules.ToggleAimlock(v)
+        end
+    })
+
+    CombatSection.General:Slider({
+        Title = "Aimlock Smoothing",
+        Desc = "0.1 = slow track, 1.0 = instant snap",
+        Flag = "AimlockSmoothing",
+        Value = { Min = 1, Max = 10, Default = 6 },
+        Callback = function(v)
+            Modules.Config.AimlockSmoothing = v / 10
+        end
+    })
+
     CombatSection.Murderer:ButtonKeybind({
         Title = "Kill All",
         Desc = "Kill all players in the round",
@@ -1858,10 +2182,10 @@ do
 end
 
 do
-    local ESP_Folder = CoreGui:FindFirstChild("VisionESP")
+    local ESP_Folder = CoreGui:FindFirstChild("XenaESP")
     if not ESP_Folder then
         ESP_Folder = Instance.new("Folder")
-        ESP_Folder.Name = "VisionESP"
+        ESP_Folder.Name = "XenaESP"
         ESP_Folder.Parent = CoreGui
     end
 
@@ -1913,22 +2237,22 @@ do
 
                 local char = plr.Character
                 if Modules.Config.EspPlayers then
-                    if not char:FindFirstChild("VisionHighlight") then
+                    if not char:FindFirstChild("XenaHighlight") then
                         local hl = Instance.new("Highlight")
-                        hl.Name = "VisionHighlight"
+                        hl.Name = "XenaHighlight"
                         hl.FillTransparency = 0.85
                         hl.OutlineTransparency = 0
                         hl.Parent = char
                     end
-                    local hl = char:FindFirstChild("VisionHighlight")
+                    local hl = char:FindFirstChild("XenaHighlight")
                     if hl then
                         hl.FillColor = espColor
                         hl.OutlineColor = espColor
                         hl.Enabled = true
                     end
                 else
-                    if char:FindFirstChild("VisionHighlight") then
-                        char.VisionHighlight:Destroy()
+                    if char:FindFirstChild("XenaHighlight") then
+                        char.XenaHighlight:Destroy()
                     end
                 end
 
@@ -1978,7 +2302,7 @@ do
                 end
                 for _, p in ipairs(Players:GetPlayers()) do
                     if p.Character then
-                        if p.Character:FindFirstChild("VisionHighlight") then p.Character.VisionHighlight:Destroy() end
+                        if p.Character:FindFirstChild("XenaHighlight") then p.Character.XenaHighlight:Destroy() end
                         if p.Character:FindFirstChild("Head") and p.Character.Head:FindFirstChild("NameESP") then p.Character.Head.NameESP:Destroy() end
                     end
                 end
@@ -1991,8 +2315,8 @@ do
     local function RemoveGunESP()
         for _, obj in ipairs(Workspace:GetDescendants()) do
             if obj.Name == "GunDrop" then
-                if obj:FindFirstChild("VisionGunHighlight") then obj.VisionGunHighlight:Destroy() end
-                if obj:FindFirstChild("VisionGunLabel") then obj.VisionGunLabel:Destroy() end
+                if obj:FindFirstChild("XenaGunHighlight") then obj.XenaGunHighlight:Destroy() end
+                if obj:FindFirstChild("XenaGunLabel") then obj.XenaGunLabel:Destroy() end
             end
         end
     end
@@ -2000,11 +2324,11 @@ do
     local function AddGunESP(gun)
         if not gun or not gun:IsA("BasePart") then return end
         
-        if gun:FindFirstChild("VisionGunHighlight") then gun.VisionGunHighlight:Destroy() end
-        if gun:FindFirstChild("VisionGunLabel") then gun.VisionGunLabel:Destroy() end
+        if gun:FindFirstChild("XenaGunHighlight") then gun.XenaGunHighlight:Destroy() end
+        if gun:FindFirstChild("XenaGunLabel") then gun.XenaGunLabel:Destroy() end
 
         local hl = Instance.new("Highlight")
-        hl.Name = "VisionGunHighlight"
+        hl.Name = "XenaGunHighlight"
         hl.Adornee = gun
         hl.FillColor = Color3.fromRGB(0, 255, 255)
         hl.OutlineColor = Color3.fromRGB(255, 255, 255)
@@ -2013,7 +2337,7 @@ do
         hl.Parent = gun
 
         local bg = Instance.new("BillboardGui")
-        bg.Name = "VisionGunLabel"
+        bg.Name = "XenaGunLabel"
         bg.Adornee = gun
         bg.Size = UDim2.new(0, 150, 0, 50)
         bg.StudsOffset = Vector3.new(0, 2, 0)
@@ -2308,6 +2632,25 @@ do
                 },
                 Modules.GrabGun
             )
+        end
+    })
+
+    buttonsSection:Space()
+
+    buttonsSection:Toggle({
+        Title = "Show Aimlock Button",
+        Desc = "Adds Aimlock toggle button.",
+        Flag = "show_aimlock_button",
+        Callback = function(enabled)
+            if enabled then
+                Modules.CreateAimlockButton()
+            else
+                local btnId = "Aimlock"
+                if Modules.MobileButtons[btnId] then
+                    pcall(function() Modules.MobileButtons[btnId]:Destroy() end)
+                    Modules.MobileButtons[btnId] = nil
+                end
+            end
         end
     })
 
