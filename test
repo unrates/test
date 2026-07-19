@@ -1572,13 +1572,13 @@ do
         Modules.MobileButtons[btnId] = screenGui
 
         local btn = Instance.new("TextButton")
-        btn.Name = "AimlockBtn"
-        btn.Text = "⊕"
+        btn.Name = "CamlockBtn"
+        btn.Text = "Camlock"
         btn.TextColor3 = Color3.fromHex("#E6F7FF")
         btn.TextScaled = true
         btn.Font = Enum.Font.GothamBold
-        btn.Size = UDim2.fromOffset(60, 60)
-        btn.Position = UDim2.new(0.9, -20, 0.35, 0)
+        btn.Size = UDim2.fromOffset(80, 45)
+        btn.Position = UDim2.new(0.9, -40, 0.35, 0)
         btn.BackgroundColor3 = Color3.fromHex("#09202B")
         btn.BackgroundTransparency = 0.3
         btn.AutoButtonColor = true
