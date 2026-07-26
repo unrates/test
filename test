@@ -1,4 +1,4 @@
-local UserInputService, CurrentCamera, n1, n2, u13, n3, u15, u16, u17, v18, v25, u29, u31, u32, u61, u62, t3, t4, v68, v78, u113, u117, n8, u123, u124, u125, v142, u144, u145, u146, u147, u148, u149, u150, u151, u152, u168, u169, u170, u171, u172, u173, u174, v179, u180, u181, u182, u183, u184, u185, u194, u195, id, u197, u198, u201, u202, u203, u204, u205, u206, u207, u208, v227, v234, v241, u254, u255, u256, u257, u258, u259, u260, u261, u262, u263, u264, u270, u271, u272, u273, u274, u275, u276, u277, u278, u279, u280, u281, u282, u283, u284, v292, v293, v294, v295, v296, v297, t32, u305
+local UserInputService, CurrentCamera, n1, n2, u13, n3, u15, u16, u17, v18, v25, u29, u31, u32, u61, u62, t3, t4, v68, v78, u113, u117, n8, u123, u124, u125, v142, u144, u145, u146, u147, u148, u149, u150, u151, u152, u168, u169, u170, u171, u172, u173, u174, v179, u180, u181, u182, u183, u184, u185, u194, u195, id, u197, u198, u201, u202, u203, u204, u205, u206, u207, u208, v227, v234, v241, u254, u255, u256, u257, u258, u259, u260, u261, u262, u263, u264, u270, u271, u272, u273, u274, u275, u276, u277, u278, u279, u280, u281, u282, u283, u284, v292, v293, v294, v295, v296, v297, v298, t32, u305, uFarmOn, uFarmMethod, uFarmSpeed, uFarmNoclip, uFarmAntiAfk, uFarmConn, uFarmAfkConn
 
 do
 	local u9, u10, u98, u103, u153
@@ -2772,6 +2772,10 @@ do
 		Title = "Main",
 		Icon = "zap",
 	})
+	v298 = v291:Tab({
+		Title = "Auto Farm",
+		Icon = "coins",
+	})
 	v293 = v291:Tab({
 		Title = "ESP",
 		Icon = "eye",
@@ -4042,6 +4046,271 @@ v292:Dropdown({
 		n1 = tonumber(p77) or 200
 	end,
 })
+
+-- ═══════════════════════════════════════
+-- Auto Farm (Coin) — tab next to Main
+-- ═══════════════════════════════════════
+uFarmOn = false
+uFarmMethod = "Tween"
+uFarmSpeed = 140
+uFarmNoclip = true
+uFarmAntiAfk = true
+uFarmConn = nil
+uFarmAfkConn = nil
+
+do
+	local TweenService = game:GetService("TweenService")
+	local VirtualUser = game:GetService("VirtualUser")
+	local uFarmLP = LocalPlayer
+	local uFarmWS = Workspace
+	local uFarmNotify = v18
+
+	local function setNoclip(state)
+		local char = uFarmLP.Character
+		if not char then
+			return
+		end
+		for _, part in ipairs(char:GetDescendants()) do
+			if part:IsA("BasePart") then
+				part.CanCollide = not state
+			end
+		end
+	end
+
+	local function getCoins()
+		local coins = {}
+		local seen = {}
+
+		local function tryAdd(part)
+			if part and part:IsA("BasePart") and part.Parent and not seen[part] then
+				seen[part] = true
+				table.insert(coins, part)
+			end
+		end
+
+		local containers = {
+			uFarmWS:FindFirstChild("CoinContainer"),
+			uFarmWS:FindFirstChild("Coins"),
+			uFarmWS:FindFirstChild("Map"),
+		}
+
+		for _, container in ipairs(containers) do
+			if container then
+				for _, child in ipairs(container:GetDescendants()) do
+					if child:IsA("BasePart") then
+						local n = child.Name:lower()
+						if n == "coin" or n == "coinbase" or n:find("coin") then
+							tryAdd(child)
+						end
+					end
+				end
+			end
+		end
+
+		if #coins == 0 then
+			for _, obj in ipairs(uFarmWS:GetDescendants()) do
+				if obj:IsA("BasePart") then
+					local n = obj.Name:lower()
+					if n == "coin" or n == "coinbase" then
+						tryAdd(obj)
+					elseif (obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChild("TouchInterest")) and n:find("coin") then
+						tryAdd(obj)
+					end
+				end
+			end
+		end
+
+		return coins
+	end
+
+	local function closestCoin(root)
+		local coins = getCoins()
+		local best, bestDist = nil, math.huge
+		for _, coin in ipairs(coins) do
+			local d = (coin.Position - root.Position).Magnitude
+			if d < bestDist then
+				bestDist = d
+				best = coin
+			end
+		end
+		return best, bestDist
+	end
+
+	local function moveTo(root, targetPos)
+		if uFarmMethod == "Instant" then
+			root.CFrame = CFrame.new(targetPos + Vector3.new(0, 2.5, 0))
+			return
+		end
+
+		local dist = (root.Position - targetPos).Magnitude
+		local duration = math.clamp(dist / math.max(uFarmSpeed, 20), 0.05, 1.8)
+		local tween = TweenService:Create(
+			root,
+			TweenInfo.new(duration, Enum.EasingStyle.Linear),
+			{ CFrame = CFrame.new(targetPos + Vector3.new(0, 2.5, 0)) }
+		)
+		tween:Play()
+		tween.Completed:Wait()
+	end
+
+	local function farmLoop()
+		while uFarmOn do
+			local char = uFarmLP.Character
+			local root = char and char:FindFirstChild("HumanoidRootPart")
+			local hum = char and char:FindFirstChildOfClass("Humanoid")
+
+			if root and hum and hum.Health > 0 then
+				if uFarmNoclip then
+					setNoclip(true)
+				end
+
+				local coin = closestCoin(root)
+				if coin and coin.Parent then
+					pcall(function()
+						moveTo(root, coin.Position)
+					end)
+					task.wait(0.08)
+				else
+					task.wait(0.35)
+				end
+			else
+				task.wait(0.5)
+			end
+
+			task.wait(0.03)
+		end
+
+		if uFarmNoclip then
+			setNoclip(false)
+		end
+	end
+
+	local function startAntiAfk()
+		if uFarmAfkConn then
+			uFarmAfkConn:Disconnect()
+			uFarmAfkConn = nil
+		end
+		uFarmAfkConn = uFarmLP.Idled:Connect(function()
+			if uFarmAntiAfk then
+				pcall(function()
+					VirtualUser:CaptureController()
+					VirtualUser:ClickButton2(Vector2.new())
+				end)
+			end
+		end)
+	end
+
+	local function stopAntiAfk()
+		if uFarmAfkConn then
+			uFarmAfkConn:Disconnect()
+			uFarmAfkConn = nil
+		end
+	end
+
+	v298:Paragraph({
+		Title = "Coin Auto Farm",
+		Content = "Collects map coins automatically.\nTween = smoother  ·  Instant = faster TP.\nUse on an alt if worried about kicks.",
+	})
+
+	v298:Toggle({
+		Title = "Enable Auto Farm",
+		Default = false,
+		Callback = function(state)
+			uFarmOn = state
+			if state then
+				if uFarmAntiAfk then
+					startAntiAfk()
+				end
+				task.spawn(farmLoop)
+				uFarmNotify:Notify({
+					Title = "XenaHub",
+					Content = "Auto Farm ON (" .. uFarmMethod .. ")",
+					Duration = 3,
+					Icon = "bell",
+				})
+			else
+				stopAntiAfk()
+				setNoclip(false)
+				uFarmNotify:Notify({
+					Title = "XenaHub",
+					Content = "Auto Farm OFF",
+					Duration = 3,
+					Icon = "bell",
+				})
+			end
+		end,
+	})
+
+	v298:Dropdown({
+		Title = "Farm Method",
+		Options = { "Tween", "Instant" },
+		Default = "Tween",
+		Callback = function(opt)
+			uFarmMethod = opt
+			uFarmNotify:Notify({
+				Title = "XenaHub",
+				Content = "Farm method: " .. opt,
+				Duration = 2,
+				Icon = "bell",
+			})
+		end,
+	})
+
+	v298:Button({
+		Title = "Tween Speed Slider",
+		Description = "Studs/sec for Tween method (higher = faster)",
+		Callback = function()
+			v25("Tween Speed", 40, 400, uFarmSpeed, 10, function(val)
+				uFarmSpeed = val
+			end, function()
+				uFarmSpeed = 140
+				uFarmNotify:Notify({
+					Title = "XenaHub",
+					Content = "Tween speed reset to 140",
+					Duration = 3,
+					Icon = "bell",
+				})
+			end)
+		end,
+	})
+
+	v298:Toggle({
+		Title = "Noclip While Farming",
+		Default = true,
+		Callback = function(state)
+			uFarmNoclip = state
+			if not state and not uFarmOn then
+				setNoclip(false)
+			end
+		end,
+	})
+
+	v298:Toggle({
+		Title = "Anti-AFK",
+		Description = "Prevents Roblox idle kick while farming",
+		Default = true,
+		Callback = function(state)
+			uFarmAntiAfk = state
+			if state and uFarmOn then
+				startAntiAfk()
+			elseif not state then
+				stopAntiAfk()
+			end
+			uFarmNotify:Notify({
+				Title = "XenaHub",
+				Content = state and "Anti-AFK ON" or "Anti-AFK OFF",
+				Duration = 2,
+				Icon = "bell",
+			})
+		end,
+	})
+
+	v298:Divider()
+	v298:Paragraph({
+		Title = "Tips",
+		Content = "• Best results as Innocent during a live round\n• Instant is quicker but more detectable\n• Bag fills around ~40 coins per round",
+	})
+end
 
 local t48 = {
 	Title = "Enable ESP",
