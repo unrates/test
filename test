@@ -1,4 +1,4 @@
-local UserInputService, CurrentCamera, n1, n2, u13, n3, u15, u16, u17, v18, v25, u29, u31, u32, u61, u62, t3, t4, v68, v78, u113, u117, n8, u123, u124, u125, v142, u144, u145, u146, u147, u148, u149, u150, u151, u152, u168, u169, u170, u171, u172, u173, u174, v179, u180, u181, u182, u183, u184, u185, u194, u195, id, u197, u198, u201, u202, u203, u204, u205, u206, u207, u208, v227, v234, v241, u254, u255, u256, u257, u258, u259, u260, u261, u262, u263, u264, u270, u271, u272, u273, u274, u275, u276, u277, u278, u279, u280, u281, u282, u283, u284, v292, v293, t32, u305
+local UserInputService, CurrentCamera, n1, n2, u13, n3, u15, u16, u17, v18, v25, u29, u31, u32, u61, u62, t3, t4, v68, v78, u113, u117, n8, u123, u124, u125, v142, u144, u145, u146, u147, u148, u149, u150, u151, u152, u168, u169, u170, u171, u172, u173, u174, v179, u180, u181, u182, u183, u184, u185, u194, u195, id, u197, u198, u201, u202, u203, u204, u205, u206, u207, u208, v227, v234, v241, u254, u255, u256, u257, u258, u259, u260, u261, u262, u263, u264, u270, u271, u272, u273, u274, u275, u276, u277, u278, u279, u280, u281, u282, u283, u284, v292, v293, v294, v295, v296, v297, t32, u305
 
 do
 	local u9, u10, u98, u103, u153
@@ -2776,6 +2776,22 @@ do
 		Title = "ESP",
 		Icon = "eye",
 	})
+	v294 = v291:Tab({
+		Title = "Skybox",
+		Icon = "cloud-sun",
+	})
+	v295 = v291:Tab({
+		Title = "Crosshair",
+		Icon = "crosshair",
+	})
+	v296 = v291:Tab({
+		Title = "Graphics",
+		Icon = "monitor",
+	})
+	v297 = v291:Tab({
+		Title = "Extra",
+		Icon = "code",
+	})
 	v292:Paragraph({
 		Title = "Auto-Loaded Buttons",
 		Content = "Gold Bomb, Normal Bomb and Shoot/Throw are enabled by default.",
@@ -3106,12 +3122,12 @@ function t37.Callback(p66)
 end
 
 v292:Toggle(t37)
-v292:Divider()
-v292:Paragraph({
+
+v294:Paragraph({
 	Title = "Skybox",
 	Content = "Click the button below to open the visual skybox picker.\nSelecting a preset applies it instantly.",
 })
-v292:Button({
+v294:Button({
 	Title = "Open Skybox Picker",
 	Description = "Color preview list — click to apply instantly",
 	Callback = function()
@@ -3343,9 +3359,9 @@ function t38.Callback()
 	u317()
 end
 
-v292:Button(t38)
-v292:Divider()
-v292:Paragraph({
+v294:Button(t38)
+
+v295:Paragraph({
 	Title = "Crosshair",
 	Content = "Visible only when ShiftLock is active.\nSpin option is inside the picker.",
 })
@@ -3445,8 +3461,8 @@ function t39.Callback(p68)
 	})
 end
 
-v292:Toggle(t39)
-v292:Button({
+v295:Toggle(t39)
+v295:Button({
 	Title = "Open Cursor Picker",
 	Description = "Visual grid with spin toggle — click to apply",
 	Callback = function()
@@ -3676,8 +3692,8 @@ v292:Button({
 		XenaCursorPicker:Destroy()
 	end,
 })
-v292:Divider()
-v292:Paragraph({
+
+v296:Paragraph({
 	Title = "Graphics",
 	Content = "Low: removes textures, map looks flat, boosts FPS.\nHigh: Bloom, SunRays, enhanced lighting.",
 })
@@ -3754,7 +3770,7 @@ function t40.Callback(p70)
 	u323()
 end
 
-v292:Toggle(t40)
+v296:Toggle(t40)
 
 local t41 = {
 	Title = "High Graphics (Beautiful)",
@@ -3832,7 +3848,7 @@ function t41.Callback(p71)
 	u326()
 end
 
-v292:Toggle(t41)
+v296:Toggle(t41)
 
 local t42 = {
 	Title = "FOV Slider",
@@ -3858,9 +3874,9 @@ function t42.Callback()
 	end)
 end
 
-v292:Button(t42)
-v292:Divider()
-v292:Paragraph({
+v296:Button(t42)
+
+v297:Paragraph({
 	Title = "Extra Scripts",
 	Content = "Universal scripts and additional tools.",
 })
@@ -3885,7 +3901,7 @@ function t43.Callback()
 	})
 end
 
-v292:Button(t43)
+v297:Button(t43)
 
 local t44 = {
 	Title = "Load Infinite Yield",
@@ -3907,7 +3923,7 @@ function t44.Callback()
 	})
 end
 
-v292:Button(t44)
+v297:Button(t44)
 v292:Divider()
 
 local t45 = {
