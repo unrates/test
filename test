@@ -33,7 +33,7 @@ do
 				u16 = false
 				u17 = true
 				v18 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
-				v18:SetTheme("Dark")
+				v18:SetTheme("HotPink")
 
 				do
 					local _ = v18
@@ -2760,7 +2760,7 @@ do
 		Author = "Xena",
 		Folder = "XenaHub",
 		Size = UDim2.fromOffset(700, 550),
-		Theme = "Dark",
+		Theme = "HotPink",
 		Acrylic = false,
 		HideSearchBar = false,
 		OpenButton = {
