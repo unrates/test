@@ -2656,100 +2656,75 @@ do
 		if u286.GoldBomb then
 			u286.GoldBomb.lbl.Text = u9 and "WAIT..." or "GOLD\nJUMP"
 		end
-
 		if u286.NormalBomb then
 			u286.NormalBomb.lbl.Text = u10 and "WAIT..." or "NORMAL\nJUMP"
 		end
-
 		if u286.Shoot and u286.Shoot.img then
 			local v793 = u287.Backpack:FindFirstChild("Knife") or u287.Character and u287.Character:FindFirstChild("Knife")
-
 			u286.Shoot.img.Image = v793 and "rbxassetid://9695655416" or "rbxassetid://5159914132"
 			u286.Shoot.lbl.Text = v793 and "THROW" or "SHOOT"
 		end
-
 		if u286.ESP then
-			local v794 = u61 and Color3.fromRGB(50, 220, 80) or Color3.fromRGB(10, 140, 30)
-
+			local v794 = u61 and Color3.fromRGB(59, 130, 246) or Color3.fromRGB(37, 99, 235)
 			u286.ESP.lbl.Text = u61 and "ESP\nON" or "ESP\nOFF"
 			u286.ESP.lbl.TextColor3 = v794
 			u286.ESP.stroke.Color = v794
 		end
-
 		if u286.Flick then
 			local v795 = u288.MouseBehavior == Enum.MouseBehavior.LockCenter
-			local v796 = u98 and Color3.fromRGB(255, 120, 0) or (v795 and Color3.fromRGB(120, 200, 255) or Color3.fromRGB(180, 50, 255))
-
+			local v796 = u98 and Color3.fromRGB(255, 120, 0) or Color3.fromRGB(37, 99, 235)
 			u286.Flick.lbl.Text = u98 and "WAIT..." or "FLICK"
 			u286.Flick.lbl.TextColor3 = v796
 			u286.Flick.stroke.Color = v796
 		end
-
 		if u286.WallHop then
 			local v797 = u288.MouseBehavior == Enum.MouseBehavior.LockCenter
-			local v798 = u103 and Color3.fromRGB(255, 120, 0) or (v797 and Color3.fromRGB(0, 255, 220) or Color3.fromRGB(0, 210, 210))
-
+			local v798 = u103 and Color3.fromRGB(255, 120, 0) or Color3.fromRGB(37, 99, 235)
 			u286.WallHop.lbl.Text = u103 and "WAIT..." or "WALL\nHOP"
 			u286.WallHop.lbl.TextColor3 = v798
 			u286.WallHop.stroke.Color = v798
 		end
-
 		if u286.Speed then
-			local v799 = u113 and Color3.fromRGB(0, 220, 200) or Color3.fromRGB(0, 140, 120)
-
+			local v799 = u113 and Color3.fromRGB(59, 130, 246) or Color3.fromRGB(37, 99, 235)
 			u286.Speed.lbl.Text = u113 and "SPEED\nON" or "SPEED"
 			u286.Speed.lbl.TextColor3 = v799
 			u286.Speed.stroke.Color = v799
 		end
-
 		if u286.Stretch then
-			local v800 = u117 and Color3.fromRGB(255, 140, 30) or Color3.fromRGB(200, 80, 0)
-
+			local v800 = u117 and Color3.fromRGB(59, 130, 246) or Color3.fromRGB(37, 99, 235)
 			u286.Stretch.lbl.Text = u117 and "STRETCH\nON" or "STRETCH"
 			u286.Stretch.lbl.TextColor3 = v800
 			u286.Stretch.stroke.Color = v800
 		end
-
 		if u286.GrabGun then
 			local GunDrop = u289:FindFirstChild("GunDrop", true)
-			local v802 = GunDrop and Color3.fromRGB(255, 215, 0) or Color3.fromRGB(200, 100, 0)
-
+			local v802 = GunDrop and Color3.fromRGB(59, 130, 246) or Color3.fromRGB(37, 99, 235)
 			u286.GrabGun.lbl.Text = GunDrop and "GRAB\nGUN" or "NO\nGUN"
 			u286.GrabGun.lbl.TextColor3 = v802
 			u286.GrabGun.stroke.Color = v802
 		end
-
 		if u286.FlingMurderer then
 			local v803 = false
-
 			for _, player in ipairs(u290:GetPlayers()) do
 				if player ~= u287 and (player.Backpack:FindFirstChild("Knife") or player.Character and player.Character:FindFirstChild("Knife")) then
 					v803 = true
-
 					break
 				end
 			end
-
 			local v806 = u153 and Color3.fromRGB(255, 180, 0) or (v803 and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(200, 20, 20))
-
 			u286.FlingMurderer.lbl.Text = u153 and "FLING..." or (v803 and "FLING\nMURD" or "NO\nMURD")
 			u286.FlingMurderer.lbl.TextColor3 = v806
 			u286.FlingMurderer.stroke.Color = v806
 		end
-
 		if u286.FlingSheriff then
 			local v807 = false
-
 			for _, player in ipairs(u290:GetPlayers()) do
 				if player ~= u287 and (player.Backpack:FindFirstChild("Gun") or player.Character and player.Character:FindFirstChild("Gun")) then
 					v807 = true
-
 					break
 				end
 			end
-
 			local v810 = u153 and Color3.fromRGB(255, 180, 0) or (v807 and Color3.fromRGB(40, 130, 255) or Color3.fromRGB(10, 80, 200))
-
 			u286.FlingSheriff.lbl.Text = u153 and "FLING..." or (v807 and "FLING\nSHERIF" or "NO\nSHERIF")
 			u286.FlingSheriff.lbl.TextColor3 = v810
 			u286.FlingSheriff.stroke.Color = v810
