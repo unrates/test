@@ -30,7 +30,7 @@ do
 				u16 = false
 				u17 = true
 				v18 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
-				v18:SetTheme("Crimson")
+				v18:SetTheme("Rose")
 
 				do
 					local _ = v18
