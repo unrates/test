@@ -4049,11 +4049,10 @@ v292:Dropdown({
 
 -- ═══════════════════════════════════════
 -- Auto Farm (Coin) — tab next to Main
--- Merged from beach-ball farm logic (Coin_Server targets)
 -- ═══════════════════════════════════════
 uFarmOn = false
 uFarmMethod = "Tween"
-uFarmSpeed = 15
+uFarmSpeed = 140
 uFarmNoclip = true
 uFarmAntiAfk = true
 uFarmConn = nil
@@ -4062,27 +4061,9 @@ uFarmAfkConn = nil
 do
 	local TweenService = game:GetService("TweenService")
 	local VirtualUser = game:GetService("VirtualUser")
-	local RunService = game:GetService("RunService")
 	local uFarmLP = LocalPlayer
 	local uFarmWS = Workspace
 	local uFarmNotify = v18
-
-	local visitedPositions = {}
-	local collected = 0
-	local startTime = 0
-	local collectSound = nil
-	local noclipConn = nil
-
-	local function ensureSound(root)
-		if collectSound and collectSound.Parent then
-			return
-		end
-		collectSound = Instance.new("Sound")
-		collectSound.Name = "XenaCoinCollect"
-		collectSound.SoundId = "rbxassetid://12221967"
-		collectSound.Volume = 1
-		collectSound.Parent = root
-	end
 
 	local function setNoclip(state)
 		local char = uFarmLP.Character
@@ -4096,56 +4077,45 @@ do
 		end
 	end
 
-	local function startNoclipLoop()
-		if noclipConn then
-			noclipConn:Disconnect()
-			noclipConn = nil
-		end
-		if not uFarmNoclip then
-			return
-		end
-		noclipConn = RunService.Stepped:Connect(function()
-			if uFarmOn and uFarmNoclip then
-				local char = uFarmLP.Character
-				if char then
-					for _, v in ipairs(char:GetDescendants()) do
-						if v:IsA("BasePart") then
-							v.CanCollide = false
-						end
-					end
-				end
-			end
-		end)
-	end
-
-	local function stopNoclipLoop()
-		if noclipConn then
-			noclipConn:Disconnect()
-			noclipConn = nil
-		end
-		setNoclip(false)
-	end
-
-	-- Targets Coin_Server (same as beach-ball farm) + fallback coin names
-	local function getCoins(root)
+	local function getCoins()
 		local coins = {}
 		local seen = {}
 
 		local function tryAdd(part)
-			if part and part:IsA("BasePart") and part.Parent and not seen[part] and not visitedPositions[part] then
+			if part and part:IsA("BasePart") and part.Parent and not seen[part] then
 				seen[part] = true
 				table.insert(coins, part)
 			end
 		end
 
-		for _, obj in ipairs(uFarmWS:GetDescendants()) do
-			if obj:IsA("BasePart") then
-				local n = obj.Name
-				local nl = n:lower()
-				if n == "Coin_Server" or nl == "coin" or nl == "coinbase" or nl == "coin_server" then
-					tryAdd(obj)
-				elseif (obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChild("TouchInterest")) and nl:find("coin") then
-					tryAdd(obj)
+		local containers = {
+			uFarmWS:FindFirstChild("CoinContainer"),
+			uFarmWS:FindFirstChild("Coins"),
+			uFarmWS:FindFirstChild("Map"),
+		}
+
+		for _, container in ipairs(containers) do
+			if container then
+				for _, child in ipairs(container:GetDescendants()) do
+					if child:IsA("BasePart") then
+						local n = child.Name:lower()
+						if n == "coin" or n == "coinbase" or n:find("coin") then
+							tryAdd(child)
+						end
+					end
+				end
+			end
+		end
+
+		if #coins == 0 then
+			for _, obj in ipairs(uFarmWS:GetDescendants()) do
+				if obj:IsA("BasePart") then
+					local n = obj.Name:lower()
+					if n == "coin" or n == "coinbase" then
+						tryAdd(obj)
+					elseif (obj:FindFirstChildOfClass("TouchTransmitter") or obj:FindFirstChild("TouchInterest")) and n:find("coin") then
+						tryAdd(obj)
+					end
 				end
 			end
 		end
@@ -4154,24 +4124,13 @@ do
 	end
 
 	local function closestCoin(root)
-		local coins = getCoins(root)
+		local coins = getCoins()
 		local best, bestDist = nil, math.huge
 		for _, coin in ipairs(coins) do
 			local d = (coin.Position - root.Position).Magnitude
-			-- Prefer nearby coins first (same 250 stud range as beach script)
-			if d < bestDist and d < 250 then
+			if d < bestDist then
 				bestDist = d
 				best = coin
-			end
-		end
-		-- If nothing in range, take global closest
-		if not best then
-			for _, coin in ipairs(coins) do
-				local d = (coin.Position - root.Position).Magnitude
-				if d < bestDist then
-					bestDist = d
-					best = coin
-				end
 			end
 		end
 		return best, bestDist
@@ -4184,8 +4143,7 @@ do
 		end
 
 		local dist = (root.Position - targetPos).Magnitude
-		local speed = math.max(uFarmSpeed, 5)
-		local duration = math.clamp(dist / speed, 0.05, 3)
+		local duration = math.clamp(dist / math.max(uFarmSpeed, 20), 0.05, 1.8)
 		local tween = TweenService:Create(
 			root,
 			TweenInfo.new(duration, Enum.EasingStyle.Linear),
@@ -4196,42 +4154,23 @@ do
 	end
 
 	local function farmLoop()
-		visitedPositions = {}
-		collected = 0
-		startTime = tick()
-
 		while uFarmOn do
 			local char = uFarmLP.Character
 			local root = char and char:FindFirstChild("HumanoidRootPart")
 			local hum = char and char:FindFirstChildOfClass("Humanoid")
 
 			if root and hum and hum.Health > 0 then
-				ensureSound(root)
 				if uFarmNoclip then
 					setNoclip(true)
 				end
 
 				local coin = closestCoin(root)
-				if coin and coin.Parent and coin:IsDescendantOf(uFarmWS) then
+				if coin and coin.Parent then
 					pcall(function()
 						moveTo(root, coin.Position)
 					end)
 					task.wait(0.08)
-					-- Mark visited + count if still present after arrival
-					if coin and coin.Parent and coin:IsDescendantOf(uFarmWS) then
-						visitedPositions[coin] = true
-						collected = collected + 1
-						if collectSound then
-							pcall(function()
-								collectSound:Play()
-							end)
-						end
-					end
 				else
-					-- Clear visited periodically so respawned coins can be farmed again
-					if next(visitedPositions) and (tick() - startTime) % 30 < 0.5 then
-						visitedPositions = {}
-					end
 					task.wait(0.35)
 				end
 			else
@@ -4241,7 +4180,9 @@ do
 			task.wait(0.03)
 		end
 
-		stopNoclipLoop()
+		if uFarmNoclip then
+			setNoclip(false)
+		end
 	end
 
 	local function startAntiAfk()
@@ -4254,10 +4195,6 @@ do
 				pcall(function()
 					VirtualUser:CaptureController()
 					VirtualUser:ClickButton2(Vector2.new())
-					-- also match original beach-ball pattern
-					VirtualUser:Button2Down(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
-					task.wait(1)
-					VirtualUser:Button2Up(Vector2.new(0, 0), workspace.CurrentCamera.CFrame)
 				end)
 			end
 		end)
@@ -4270,20 +4207,9 @@ do
 		end
 	end
 
-	-- Reset visited when character respawns
-	uFarmLP.CharacterAdded:Connect(function(char)
-		visitedPositions = {}
-		task.defer(function()
-			local root = char:WaitForChild("HumanoidRootPart", 5)
-			if root then
-				ensureSound(root)
-			end
-		end)
-	end)
-
 	v298:Paragraph({
 		Title = "Coin Auto Farm",
-		Content = "Collects Coin_Server / map coins automatically.\nTween = smoother  ·  Instant = faster TP.\nVisited tracking + collect sound included.\nUse on an alt if worried about kicks.",
+		Content = "Collects map coins automatically.\nTween = smoother  ·  Instant = faster TP.\nUse on an alt if worried about kicks.",
 	})
 
 	v298:Toggle({
@@ -4295,25 +4221,20 @@ do
 				if uFarmAntiAfk then
 					startAntiAfk()
 				end
-				if uFarmNoclip then
-					startNoclipLoop()
-				end
 				task.spawn(farmLoop)
 				uFarmNotify:Notify({
 					Title = "XenaHub",
-					Content = "Coin Auto Farm ON (" .. uFarmMethod .. ")",
+					Content = "Auto Farm ON (" .. uFarmMethod .. ")",
 					Duration = 3,
 					Icon = "bell",
 				})
 			else
 				stopAntiAfk()
-				stopNoclipLoop()
-				local elapsed = math.max(tick() - startTime, 0.1)
-				local rate = math.floor((collected / elapsed) * 3600)
+				setNoclip(false)
 				uFarmNotify:Notify({
 					Title = "XenaHub",
-					Content = string.format("Coin Auto Farm OFF — %d collected (~%d/hr)", collected, rate),
-					Duration = 4,
+					Content = "Auto Farm OFF",
+					Duration = 3,
 					Icon = "bell",
 				})
 			end
@@ -4337,15 +4258,15 @@ do
 
 	v298:Button({
 		Title = "Tween Speed Slider",
-		Description = "Studs/sec for Tween method (10–25 matches original beach farm feel)",
+		Description = "Studs/sec for Tween method (higher = faster)",
 		Callback = function()
-			v25("Tween Speed", 5, 50, uFarmSpeed, 1, function(val)
+			v25("Tween Speed", 40, 400, uFarmSpeed, 10, function(val)
 				uFarmSpeed = val
 			end, function()
-				uFarmSpeed = 15
+				uFarmSpeed = 140
 				uFarmNotify:Notify({
 					Title = "XenaHub",
-					Content = "Tween speed reset to 15",
+					Content = "Tween speed reset to 140",
 					Duration = 3,
 					Icon = "bell",
 				})
@@ -4358,10 +4279,8 @@ do
 		Default = true,
 		Callback = function(state)
 			uFarmNoclip = state
-			if state and uFarmOn then
-				startNoclipLoop()
-			else
-				stopNoclipLoop()
+			if not state and not uFarmOn then
+				setNoclip(false)
 			end
 		end,
 	})
@@ -4386,28 +4305,11 @@ do
 		end,
 	})
 
-	v298:Button({
-		Title = "Reset Collect Counter",
-		Description = "Clears visited list + collected count",
-		Callback = function()
-			visitedPositions = {}
-			collected = 0
-			startTime = tick()
-			uFarmNotify:Notify({
-				Title = "XenaHub",
-				Content = "Coin counter & visited list reset",
-				Duration = 2,
-				Icon = "bell",
-			})
-		end,
-	})
-
 	v298:Divider()
 	v298:Paragraph({
 		Title = "Tips",
-		Content = "• Targets parts named Coin_Server (and coin / coinbase)\n• Best results as Innocent during a live round\n• Instant is quicker but more detectable\n• Bag fills around ~40 coins per round",
+		Content = "• Best results as Innocent during a live round\n• Instant is quicker but more detectable\n• Bag fills around ~40 coins per round",
 	})
-
 end
 
 local t48 = {
