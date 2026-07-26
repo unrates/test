@@ -2778,6 +2778,8 @@ do
 		Theme = "DeepBlue",
 		Acrylic = false,
 		HideSearchBar = false,
+		Background = "rbxassetid://110168538564682",
+		BackgroundImageTransparency = 0.35, -- adjust to fit
 		OpenButton = {
 			Title = "XenaHub",
 			CornerRadius = UDim.new(1, 0),
