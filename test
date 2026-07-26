@@ -30,7 +30,7 @@ do
 				u16 = false
 				u17 = true
 				v18 = loadstring(game:HttpGet("https://raw.githubusercontent.com/Footagesus/WindUI/refs/heads/main/dist/main.lua"))()
-				v18:SetTheme("Midnight")
+				v18:SetTheme("Crimson")
 
 				do
 					local _ = v18
@@ -82,7 +82,7 @@ do
 					local u24 = v21
 
 					function v25(p4, p5, p6, p7, p8, p9, p10)
-						local v384 = "XenaSlider_" .. p4:gsub("%s+", "_")
+						local v384 = "RuzSlider_" .. p4:gsub("%s+", "_")
 						local v385 = game.CoreGui:FindFirstChild(v384)
 
 						if not v385 then
@@ -97,14 +97,14 @@ do
 
 							Frame.Size = UDim2.new(0, 300, 0, 175)
 							Frame.Position = UDim2.new(0.5, -150, 0.35, 0)
-							Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-							Frame.BackgroundTransparency = 0.05
+							Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+							Frame.BackgroundTransparency = 0.08
 							Frame.BorderSizePixel = 0
 							Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 10)
 
 							local UIStroke = Instance.new("UIStroke", Frame)
 
-							UIStroke.Color = Color3.fromRGB(255, 105, 180)
+							UIStroke.Color = Color3.fromRGB(220, 38, 38)
 							UIStroke.Thickness = 1.5
 							UIStroke.Transparency = 0.15
 
@@ -113,7 +113,7 @@ do
 							TextLabel2.Size = UDim2.new(1, -44, 0, 36)
 							TextLabel2.Position = UDim2.new(0, 12, 0, 0)
 							TextLabel2.BackgroundTransparency = 1
-							TextLabel2.Text = "XenaHub  —  " .. p4
+							TextLabel2.Text = "RuzHub  —  " .. p4
 							TextLabel2.TextColor3 = Color3.fromRGB(255, 255, 255)
 							TextLabel2.Font = Enum.Font.GothamBold
 							TextLabel2.TextSize = 14
@@ -123,7 +123,7 @@ do
 
 							TextButton.Size = UDim2.new(0, 28, 0, 28)
 							TextButton.Position = UDim2.new(1, -34, 0, 4)
-							TextButton.BackgroundColor3 = Color3.fromRGB(255, 20, 147)
+							TextButton.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
 							TextButton.Text = "X"
 							TextButton.TextColor3 = Color3.new(1, 1, 1)
 							TextButton.Font = Enum.Font.GothamBold
@@ -153,7 +153,7 @@ do
 
 							Frame2.Size = UDim2.new(1, -30, 0, 10)
 							Frame2.Position = UDim2.new(0, 15, 0, 72)
-							Frame2.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
+							Frame2.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
 							Frame2.BorderSizePixel = 0
 							Instance.new("UICorner", Frame2).CornerRadius = UDim.new(1, 0)
 
@@ -161,7 +161,7 @@ do
 							local Frame3 = Instance.new("Frame", Frame2)
 
 							Frame3.Size = UDim2.new(v397, 0, 1, 0)
-							Frame3.BackgroundColor3 = Color3.fromRGB(255, 105, 180)
+							Frame3.BackgroundColor3 = Color3.fromRGB(220, 38, 38)
 							Frame3.BorderSizePixel = 0
 							Instance.new("UICorner", Frame3).CornerRadius = UDim.new(1, 0)
 
@@ -267,7 +267,7 @@ do
 								local v867 = u418 .. " set to " .. u393
 
 								u23:Notify({
-									Title = "XenaHub",
+									Title = "RuzHub",
 									Content = tostring(v867),
 									Duration = 3,
 									Icon = "bell",
@@ -278,7 +278,7 @@ do
 
 							TextButton4.Size = UDim2.new(0.48, 0, 1, 0)
 							TextButton4.Position = UDim2.new(0.52, 0, 0, 0)
-							TextButton4.BackgroundColor3 = Color3.fromRGB(219, 112, 147)
+							TextButton4.BackgroundColor3 = Color3.fromRGB(160, 20, 20)
 							TextButton4.Text = "Reset"
 							TextButton4.TextColor3 = Color3.new(1, 1, 1)
 							TextButton4.Font = Enum.Font.GothamBold
@@ -305,7 +305,7 @@ do
 				do
 					local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
-					ScreenGui.Name = "XenaLGStar"
+					ScreenGui.Name = "RuzLGStar"
 					ScreenGui.ResetOnSpawn = false
 					ScreenGui.DisplayOrder = 40
 					TextLabel = Instance.new("TextLabel", ScreenGui)
@@ -324,7 +324,7 @@ do
 					local t2, n4, u82
 					local Part = Instance.new("Part")
 
-					Part.Name = "XenaPredictionPart"
+					Part.Name = "RuzPredictionPart"
 					Part.Size = Vector3.new(0.5, 0.5, 0.5)
 					Part.Anchored = true
 					Part.CanCollide = false
@@ -351,7 +351,7 @@ do
 
 								local Part2 = Instance.new("Part")
 
-								Part2.Name = "XenaGunMarker"
+								Part2.Name = "RuzGunMarker"
 								Part2.Size = Vector3.new(1.5, 0.15, 1.5)
 								Part2.Anchored = true
 								Part2.CanCollide = false
@@ -484,7 +484,7 @@ do
 												end
 
 												u41:Notify({
-													Title = "XenaHub",
+													Title = "XenaScript",
 													Content = tostring("Gun dropped on the map!"),
 													Duration = 3,
 													Icon = "bell",
@@ -545,7 +545,7 @@ do
 									end
 
 									u46:Notify({
-										Title = "XenaHub",
+										Title = "RuzHub",
 										Content = tostring("Gun dropped on the map!"),
 										Duration = 3,
 										Icon = "bell",
@@ -571,7 +571,7 @@ do
 									end
 
 									u50:Notify({
-										Title = "XenaHub",
+										Title = "RuzHub",
 										Content = tostring("Gun dropped on the map!"),
 										Duration = 3,
 										Icon = "bell",
@@ -612,7 +612,7 @@ do
 																	end
 
 																	u53:Notify({
-																		Title = "XenaHub",
+																		Title = "RuzHub",
 																		Content = tostring("Gun dropped on the map!"),
 																		Duration = 3,
 																		Icon = "bell",
@@ -644,7 +644,7 @@ do
 																	end
 
 																	u53:Notify({
-																		Title = "XenaHub",
+																		Title = "RuzHub",
 																		Content = tostring("Gun dropped on the map!"),
 																		Duration = 3,
 																		Icon = "bell",
@@ -697,7 +697,7 @@ do
 															end
 
 															u60:Notify({
-																Title = "XenaHub",
+																Title = "RuzHub",
 																Content = tostring("Gun dropped on the map!"),
 																Duration = 3,
 																Icon = "bell",
@@ -729,7 +729,7 @@ do
 															end
 
 															u60:Notify({
-																Title = "XenaHub",
+																Title = "RuzHub",
 																Content = tostring("Gun dropped on the map!"),
 																Duration = 3,
 																Icon = "bell",
@@ -770,10 +770,10 @@ do
 						function v68()
 							for _, player in ipairs(u67:GetPlayers()) do
 								if player.Character then
-									local XenaHub_ESP = player.Character:FindFirstChild("XenaHub_ESP")
+									local RuzHub_ESP = player.Character:FindFirstChild("RuzHub_ESP")
 
-									if XenaHub_ESP then
-										XenaHub_ESP:Destroy()
+									if RuzHub_ESP then
+										RuzHub_ESP:Destroy()
 									end
 								end
 							end
@@ -817,9 +817,9 @@ do
 						local u75 = LocalPlayer
 
 						local function u76(p21, p22)
-							local v461 = p21:FindFirstChild("XenaHub_ESP") or Instance.new("Highlight")
+							local v461 = p21:FindFirstChild("RuzHub_ESP") or Instance.new("Highlight")
 
-							v461.Name = "XenaHub_ESP"
+							v461.Name = "RuzHub_ESP"
 							v461.Parent = p21
 							v461.FillColor = p22
 							v461.FillTransparency = 0.7
@@ -866,10 +866,10 @@ do
 												end
 
 												if not v886 then
-													local XenaHub_ESP = player.Character:FindFirstChild("XenaHub_ESP")
+													local RuzHub_ESP = player.Character:FindFirstChild("RuzHub_ESP")
 
-													if XenaHub_ESP then
-														XenaHub_ESP:Destroy()
+													if RuzHub_ESP then
+														RuzHub_ESP:Destroy()
 													end
 												else
 													u76(player.Character, u77[v885])
@@ -885,7 +885,7 @@ do
 							end
 
 							u70:Notify({
-								Title = "XenaHub",
+								Title = "RuzHub",
 								Content = tostring("ESP remote not found!"),
 								Duration = 3,
 								Icon = "bell",
@@ -1127,7 +1127,7 @@ do
 									end
 
 									u93:Notify({
-										Title = "XenaHub",
+										Title = "RuzHub",
 										Content = tostring("No target found!"),
 										Duration = 3,
 										Icon = "bell",
@@ -1137,7 +1137,7 @@ do
 								end
 
 								u93:Notify({
-									Title = "XenaHub",
+									Title = "RuzHub",
 									Content = tostring("No knife in inventory!"),
 									Duration = 3,
 									Icon = "bell",
@@ -1190,7 +1190,7 @@ do
 									end
 
 									u90:Notify({
-										Title = "XenaHub",
+										Title = "RuzHub",
 										Content = tostring("No target found."),
 										Duration = 3,
 										Icon = "bell",
@@ -1200,7 +1200,7 @@ do
 								end
 
 								u90:Notify({
-									Title = "XenaHub",
+									Title = "RuzHub",
 									Content = tostring("No gun in inventory!"),
 									Duration = 3,
 									Icon = "bell",
@@ -1292,7 +1292,7 @@ do
 						local v614 = "No " .. p23 .. " found!"
 
 						u111:Notify({
-							Title = "XenaHub",
+							Title = "RuzHub",
 							Content = tostring(v614),
 							Duration = 3,
 							Icon = "bell",
@@ -1459,7 +1459,7 @@ do
 
 					u138 = false
 					u141:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring("Skybox restored to default."),
 						Duration = 3,
 						Icon = "bell",
@@ -1477,7 +1477,7 @@ do
 
 					local Sky = Instance.new("Sky", u143)
 
-					Sky.Name = "XenaHub_CustomSky"
+					Sky.Name = "RuzHub_CustomSky"
 
 					local v638 = "rbxassetid://" .. tostring(p27)
 
@@ -1506,8 +1506,8 @@ do
 				u150 = nil
 				u151 = RunService
 				u152 = LocalPlayer
-				getgenv().XenaOldPos = nil
-				getgenv().XenaFPDH = Workspace.FallenPartsDestroyHeight
+				getgenv().RuzOldPos = nil
+				getgenv().RuzFPDH = Workspace.FallenPartsDestroyHeight
 				u153 = false
 
 				local u154 = LocalPlayer
@@ -1535,7 +1535,7 @@ do
 										local v679 = Accessory and Accessory:FindFirstChild("Handle")
 
 										if RootPart.Velocity.Magnitude < 50 then
-											getgenv().XenaOldPos = RootPart.CFrame
+											getgenv().RuzOldPos = RootPart.CFrame
 										end
 
 										if not Humanoid2 or not Humanoid2.Sit then
@@ -1582,7 +1582,7 @@ do
 													local v688 = p28.Name .. " — no valid fling part."
 
 													u155:Notify({
-														Title = "XenaHub",
+														Title = "RuzHub",
 														Content = tostring(v688),
 														Duration = 3,
 														Icon = "bell",
@@ -1670,18 +1670,18 @@ do
 												Humanoid:SetStateEnabled(Enum.HumanoidStateType.Seated, true)
 												u156.CurrentCamera.CameraSubject = Humanoid
 
-												if getgenv().XenaOldPos then
+												if getgenv().RuzOldPos then
 													local n10 = 0
 
 													repeat
 														n10 = n10 + 1
-														RootPart.CFrame = getgenv().XenaOldPos * CFrame.new(0, 0.5, 0)
+														RootPart.CFrame = getgenv().RuzOldPos * CFrame.new(0, 0.5, 0)
 
 														local _pcall = pcall
 														local u691 = Character
 
 														pcall(function()
-															u691:SetPrimaryPartCFrame(getgenv().XenaOldPos * CFrame.new(0, 0.5, 0))
+															u691:SetPrimaryPartCFrame(getgenv().RuzOldPos * CFrame.new(0, 0.5, 0))
 														end)
 														Humanoid:ChangeState(Enum.HumanoidStateType.GettingUp)
 
@@ -1693,11 +1693,11 @@ do
 														end
 
 														task.wait()
-													until n10 > 30 or (RootPart.Position - getgenv().XenaOldPos.p).Magnitude < 25
+													until n10 > 30 or (RootPart.Position - getgenv().RuzOldPos.p).Magnitude < 25
 
-													u156.FallenPartsDestroyHeight = getgenv().XenaFPDH
+													u156.FallenPartsDestroyHeight = getgenv().RuzFPDH
 													u155:Notify({
-														Title = "XenaHub",
+														Title = "RuzHub",
 														Content = tostring("Returned to previous position."),
 														Duration = 3,
 														Icon = "bell",
@@ -1715,7 +1715,7 @@ do
 										local v694 = p28.Name .. " is sitting, skipped."
 
 										u155:Notify({
-											Title = "XenaHub",
+											Title = "RuzHub",
 											Content = tostring(v694),
 											Duration = 3,
 											Icon = "bell",
@@ -1823,7 +1823,7 @@ do
 				t16 = {}
 				u177.Visible = false
 				u178:Notify({
-					Title = "XenaHub",
+					Title = "RuzHub",
 					Content = tostring("Low Graphics OFF"),
 					Duration = 3,
 					Icon = "bell",
@@ -1912,15 +1912,15 @@ do
 			u207 = t17
 			u208 = v21
 
-			local XenaHub_BtnLayer = game.CoreGui:FindFirstChild("XenaHub_BtnLayer")
+			local RuzHub_BtnLayer = game.CoreGui:FindFirstChild("RuzHub_BtnLayer")
 
-			if XenaHub_BtnLayer then
-				XenaHub_BtnLayer:Destroy()
+			if RuzHub_BtnLayer then
+				RuzHub_BtnLayer:Destroy()
 			end
 
 			local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
-			ScreenGui.Name = "XenaHub_BtnLayer"
+			ScreenGui.Name = "RuzHub_BtnLayer"
 			ScreenGui.ResetOnSpawn = false
 			ScreenGui.ZIndexBehavior = Enum.ZIndexBehavior.Sibling
 			ScreenGui.DisplayOrder = 10
@@ -1974,11 +1974,11 @@ do
 
 			local TextButton = Instance.new("TextButton", u214)
 
-			TextButton.Name = "XenaBtn_" .. p37
+			TextButton.Name = "RuzBtn_" .. p37
 			TextButton.Size = p39
 			TextButton.Position = p38
 			TextButton.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-			TextButton.BackgroundTransparency = 0.35
+			TextButton.BackgroundTransparency = 0.6
 			TextButton.Text = ""
 			TextButton.AutoButtonColor = false
 			TextButton.BorderSizePixel = 0
@@ -2051,7 +2051,7 @@ do
 					end
 
 					u225:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring("Gold Bomb on cooldown."),
 						Duration = 3,
 						Icon = "bell",
@@ -2085,7 +2085,7 @@ do
 					end
 
 					u232:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring("Normal Bomb on cooldown."),
 						Duration = 3,
 						Icon = "bell",
@@ -2305,7 +2305,7 @@ do
 					task.wait(0.2)
 					v624.CFrame = CFrame3
 					u127:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring("Teleported to gun!"),
 						Duration = 3,
 						Icon = "bell",
@@ -2315,7 +2315,7 @@ do
 				end
 
 				u127:Notify({
-					Title = "XenaHub",
+					Title = "RuzHub",
 					Content = tostring("Gun position not found!"),
 					Duration = 3,
 					Icon = "bell",
@@ -2328,7 +2328,7 @@ do
 		end
 
 		u127:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("No gun on map!"),
 			Duration = 3,
 			Icon = "bell",
@@ -2548,7 +2548,7 @@ do
 						local v698 = "Flinging: " .. player.Name
 
 						u158:Notify({
-							Title = "XenaHub",
+							Title = "RuzHub",
 							Content = tostring(v698),
 							Duration = 3,
 							Icon = "bell",
@@ -2561,7 +2561,7 @@ do
 			end
 
 			u158:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring("No knife player found!"),
 				Duration = 3,
 				Icon = "bell",
@@ -2571,7 +2571,7 @@ do
 		end
 
 		u158:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("Fling in progress..."),
 			Duration = 3,
 			Icon = "bell",
@@ -2597,7 +2597,7 @@ do
 						local v702 = "Flinging: " .. player.Name
 
 						u162:Notify({
-							Title = "XenaHub",
+							Title = "RuzHub",
 							Content = tostring(v702),
 							Duration = 3,
 							Icon = "bell",
@@ -2610,7 +2610,7 @@ do
 			end
 
 			u162:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring("No gun player found!"),
 				Duration = 3,
 				Icon = "bell",
@@ -2620,7 +2620,7 @@ do
 		end
 
 		u162:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("Fling in progress..."),
 			Duration = 3,
 			Icon = "bell",
@@ -2712,7 +2712,7 @@ do
 				end
 			end
 
-			local v806 = u153 and Color3.fromRGB(255, 180, 0) or (v803 and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(219, 112, 147))
+			local v806 = u153 and Color3.fromRGB(255, 180, 0) or (v803 and Color3.fromRGB(255, 50, 50) or Color3.fromRGB(200, 20, 20))
 
 			u286.FlingMurderer.lbl.Text = u153 and "FLING..." or (v803 and "FLING\nMURD" or "NO\nMURD")
 			u286.FlingMurderer.lbl.TextColor3 = v806
@@ -2738,7 +2738,7 @@ do
 		end
 	end)
 	v18:Popup({
-		Title = "XenaHub",
+		Title = "RuzHub Mmv And Mm2",
 		Icon = "sparkles",
 		Content = "v7.3 loaded!\nBombs and Shoot auto-loaded.\nOpen menu to configure everything.",
 		Buttons = {
@@ -2752,24 +2752,24 @@ do
 	})
 
 	local v291 = v18:CreateWindow({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Icon = "sparkles",
-		Author = "Xena",
-		Folder = "XenaHub",
+		Author = "Mmv And Mm2",
+		Folder = "RuzHub",
 		Size = UDim2.fromOffset(700, 550),
-		Theme = "Midnight",
+		Theme = "Crimson",
 		Acrylic = false,
 		HideSearchBar = false,
 		OpenButton = {
-			Title = "XenaHub",
+			Title = "RuzHub",
 			CornerRadius = UDim.new(1, 0),
 			StrokeThickness = 2,
 			Enabled = true,
 			OnlyMobile = false,
-			Color = ColorSequence.new(Color3.fromHex("#ff69b4"), Color3.fromHex("#c71585")),
+			Color = ColorSequence.new(Color3.fromHex("#dc2626"), Color3.fromHex("#991b1b")),
 		},
 	}):Section({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Opened = true,
 	})
 
@@ -2854,7 +2854,7 @@ do
 				local v941 = u61 and "ESP ON" or "ESP OFF"
 
 				u248:Notify({
-					Title = "XenaHub",
+					Title = "RuzHub",
 					Content = tostring(v941),
 					Duration = 3,
 					Icon = "bell",
@@ -2940,7 +2940,7 @@ local function u307(p56)
 			local v942 = u113 and "Speed Glitch ON" or "Speed Glitch OFF"
 
 			u258:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring(v942),
 				Duration = 3,
 				Icon = "bell",
@@ -2977,7 +2977,7 @@ local function u309(p58)
 			local v943 = u117 and "Stretch ON" or "Stretch OFF"
 
 			u264:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring(v943),
 				Duration = 3,
 				Icon = "bell",
@@ -3015,7 +3015,7 @@ v292:Button({
 			local v900 = "Stretch set to " .. p60 .. "%  (1.0 = normal)"
 
 			u125:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring(v900),
 				Duration = 3,
 				Icon = "bell",
@@ -3028,7 +3028,7 @@ v292:Button({
 			end
 
 			u125:Notify({
-				Title = "XenaHub",
+				Title = "RuzHub",
 				Content = tostring("Stretch reset to 50%"),
 				Duration = 3,
 				Icon = "bell",
@@ -3120,12 +3120,12 @@ v292:Button({
 	Title = "Open Skybox Picker",
 	Description = "Color preview list — click to apply instantly",
 	Callback = function()
-		local XenaSkyboxPicker = game.CoreGui:FindFirstChild("XenaSkyboxPicker")
+		local RuzSkyboxPicker = game.CoreGui:FindFirstChild("RuzSkyboxPicker")
 
-		if not XenaSkyboxPicker then
+		if not RuzSkyboxPicker then
 			local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
-			ScreenGui.Name = "XenaSkyboxPicker"
+			ScreenGui.Name = "RuzSkyboxPicker"
 			ScreenGui.ResetOnSpawn = false
 			ScreenGui.DisplayOrder = 62
 
@@ -3133,14 +3133,14 @@ v292:Button({
 
 			Frame.Size = UDim2.new(0, 310, 0, 420)
 			Frame.Position = UDim2.new(0.5, -155, 0.04, 0)
-			Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-			Frame.BackgroundTransparency = 0.03
+			Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+			Frame.BackgroundTransparency = 0.06
 			Frame.BorderSizePixel = 0
 			Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
 
 			local UIStroke = Instance.new("UIStroke", Frame)
 
-			UIStroke.Color = Color3.fromRGB(255, 105, 180)
+			UIStroke.Color = Color3.fromRGB(220, 38, 38)
 			UIStroke.Thickness = 1.5
 
 			local TextLabel = Instance.new("TextLabel", Frame)
@@ -3148,7 +3148,7 @@ v292:Button({
 			TextLabel.Size = UDim2.new(1, -44, 0, 38)
 			TextLabel.Position = UDim2.new(0, 12, 0, 0)
 			TextLabel.BackgroundTransparency = 1
-			TextLabel.Text = "XenaHub  —  Skybox Picker"
+			TextLabel.Text = "RuzHub  —  Skybox Picker"
 			TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 			TextLabel.Font = Enum.Font.GothamBold
 			TextLabel.TextSize = 14
@@ -3158,7 +3158,7 @@ v292:Button({
 
 			TextButton.Size = UDim2.new(0, 28, 0, 28)
 			TextButton.Position = UDim2.new(1, -34, 0, 5)
-			TextButton.BackgroundColor3 = Color3.fromRGB(255, 20, 147)
+			TextButton.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
 			TextButton.Text = "X"
 			TextButton.TextColor3 = Color3.new(1, 1, 1)
 			TextButton.Font = Enum.Font.GothamBold
@@ -3176,7 +3176,7 @@ v292:Button({
 
 			TextBox.Size = UDim2.new(1, -20, 0, 34)
 			TextBox.Position = UDim2.new(0, 10, 0, 44)
-			TextBox.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+			TextBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 			TextBox.Text = ""
 			TextBox.PlaceholderText = "Enter custom Skybox ID, press Enter..."
 			TextBox.TextColor3 = Color3.new(1, 1, 1)
@@ -3185,7 +3185,7 @@ v292:Button({
 			TextBox.TextSize = 13
 			TextBox.ClearTextOnFocus = false
 			Instance.new("UICorner", TextBox).CornerRadius = UDim.new(0, 6)
-			Instance.new("UIStroke", TextBox).Color = Color3.fromRGB(40, 40, 40)
+			Instance.new("UIStroke", TextBox).Color = Color3.fromRGB(80, 80, 80)
 
 			local FocusLost = TextBox.FocusLost
 			local u649 = TextBox
@@ -3197,7 +3197,7 @@ v292:Button({
 					local v902 = "Custom skybox applied — ID: " .. u649.Text
 
 					u145:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring(v902),
 						Duration = 3,
 						Icon = "bell",
@@ -3210,7 +3210,7 @@ v292:Button({
 
 			TextButton5.Size = UDim2.new(1, -20, 0, 28)
 			TextButton5.Position = UDim2.new(0, 10, 0, 84)
-			TextButton5.BackgroundColor3 = Color3.fromRGB(12, 12, 12)
+			TextButton5.BackgroundColor3 = Color3.fromRGB(40, 40, 40)
 			TextButton5.Text = "Restore Default Sky"
 			TextButton5.TextColor3 = Color3.fromRGB(200, 200, 200)
 			TextButton5.Font = Enum.Font.GothamBold
@@ -3229,7 +3229,7 @@ v292:Button({
 
 			Frame5.Size = UDim2.new(1, -20, 0, 1)
 			Frame5.Position = UDim2.new(0, 10, 0, 118)
-			Frame5.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			Frame5.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 			Frame5.BorderSizePixel = 0
 
 			local ScrollingFrame = Instance.new("ScrollingFrame", Frame)
@@ -3250,7 +3250,7 @@ v292:Button({
 				local TextButton6 = Instance.new("TextButton", ScrollingFrame)
 
 				TextButton6.Size = UDim2.new(1, -8, 0, 48)
-				TextButton6.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
+				TextButton6.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 				TextButton6.Text = ""
 				TextButton6.AutoButtonColor = false
 				TextButton6.LayoutOrder = i
@@ -3304,7 +3304,7 @@ v292:Button({
 					local v903 = "Skybox applied: " .. u664.name
 
 					u145:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring(v903),
 						Duration = 3,
 						Icon = "bell",
@@ -3316,17 +3316,17 @@ v292:Button({
 
 							if UIStroke3 then
 								UIStroke3.Thickness = 1
-								UIStroke3.Color = Color3.fromRGB(40, 40, 40)
+								UIStroke3.Color = Color3.fromRGB(80, 80, 80)
 							end
 
-							child.BackgroundColor3 = Color3.fromRGB(8, 8, 8)
+							child.BackgroundColor3 = Color3.fromRGB(20, 20, 20)
 						end
 					end
 
 					u666.Thickness = 2
-					u666.Color = Color3.fromRGB(255, 105, 180)
-					u667.BackgroundColor3 = Color3.fromRGB(40, 5, 25)
-					u668.TextColor3 = Color3.fromRGB(255, 105, 180)
+					u666.Color = Color3.fromRGB(220, 38, 38)
+					u667.BackgroundColor3 = Color3.fromRGB(50, 15, 15)
+					u668.TextColor3 = Color3.fromRGB(255, 80, 80)
 				end)
 			end
 
@@ -3335,7 +3335,7 @@ v292:Button({
 			return
 		end
 
-		XenaSkyboxPicker:Destroy()
+		RuzSkyboxPicker:Destroy()
 	end,
 })
 
@@ -3362,10 +3362,10 @@ local t39 = {
 }
 
 local function u319()
-	local XenaCrosshairDisplay = game.CoreGui:FindFirstChild("XenaCrosshairDisplay")
+	local RuzCrosshairDisplay = game.CoreGui:FindFirstChild("RuzCrosshairDisplay")
 
-	if XenaCrosshairDisplay then
-		XenaCrosshairDisplay:Destroy()
+	if RuzCrosshairDisplay then
+		RuzCrosshairDisplay:Destroy()
 	end
 
 	if u198 then
@@ -3375,7 +3375,7 @@ local function u319()
 
 	local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
-	ScreenGui.Name = "XenaCrosshairDisplay"
+	ScreenGui.Name = "RuzCrosshairDisplay"
 	ScreenGui.ResetOnSpawn = false
 	ScreenGui.DisplayOrder = 25
 	ScreenGui.IgnoreGuiInset = true
@@ -3418,10 +3418,10 @@ function t39.Callback(p68)
 	u194 = p68
 
 	if not p68 then
-		local XenaCrosshairDisplay = game.CoreGui:FindFirstChild("XenaCrosshairDisplay")
+		local RuzCrosshairDisplay = game.CoreGui:FindFirstChild("RuzCrosshairDisplay")
 
-		if XenaCrosshairDisplay then
-			XenaCrosshairDisplay:Destroy()
+		if RuzCrosshairDisplay then
+			RuzCrosshairDisplay:Destroy()
 			u197 = nil
 		end
 
@@ -3432,7 +3432,7 @@ function t39.Callback(p68)
 
 		u321.MouseIconEnabled = true
 		u320:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("Crosshair OFF"),
 			Duration = 3,
 			Icon = "bell",
@@ -3443,7 +3443,7 @@ function t39.Callback(p68)
 
 	u319()
 	u320:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring("Crosshair ON — enable ShiftLock to see it!"),
 		Duration = 3,
 		Icon = "bell",
@@ -3455,12 +3455,12 @@ v292:Button({
 	Title = "Open Cursor Picker",
 	Description = "Visual grid with spin toggle — click to apply",
 	Callback = function()
-		local XenaCursorPicker = game.CoreGui:FindFirstChild("XenaCursorPicker")
+		local RuzCursorPicker = game.CoreGui:FindFirstChild("RuzCursorPicker")
 
-		if not XenaCursorPicker then
+		if not RuzCursorPicker then
 			local ScreenGui = Instance.new("ScreenGui", game.CoreGui)
 
-			ScreenGui.Name = "XenaCursorPicker"
+			ScreenGui.Name = "RuzCursorPicker"
 			ScreenGui.ResetOnSpawn = false
 			ScreenGui.DisplayOrder = 60
 
@@ -3468,14 +3468,14 @@ v292:Button({
 
 			Frame.Size = UDim2.new(0, 300, 0, 460)
 			Frame.Position = UDim2.new(0.5, -150, 0.04, 0)
-			Frame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
-			Frame.BackgroundTransparency = 0.03
+			Frame.BackgroundColor3 = Color3.fromRGB(10, 10, 10)
+			Frame.BackgroundTransparency = 0.06
 			Frame.BorderSizePixel = 0
 			Instance.new("UICorner", Frame).CornerRadius = UDim.new(0, 12)
 
 			local UIStroke = Instance.new("UIStroke", Frame)
 
-			UIStroke.Color = Color3.fromRGB(255, 105, 180)
+			UIStroke.Color = Color3.fromRGB(220, 38, 38)
 			UIStroke.Thickness = 1.5
 
 			local TextLabel = Instance.new("TextLabel", Frame)
@@ -3483,7 +3483,7 @@ v292:Button({
 			TextLabel.Size = UDim2.new(1, -44, 0, 38)
 			TextLabel.Position = UDim2.new(0, 12, 0, 0)
 			TextLabel.BackgroundTransparency = 1
-			TextLabel.Text = "XenaHub  —  Cursor Picker"
+			TextLabel.Text = "RuzHub  —  Cursor Picker"
 			TextLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
 			TextLabel.Font = Enum.Font.GothamBold
 			TextLabel.TextSize = 14
@@ -3493,7 +3493,7 @@ v292:Button({
 
 			TextButton.Size = UDim2.new(0, 28, 0, 28)
 			TextButton.Position = UDim2.new(1, -34, 0, 5)
-			TextButton.BackgroundColor3 = Color3.fromRGB(255, 20, 147)
+			TextButton.BackgroundColor3 = Color3.fromRGB(180, 30, 30)
 			TextButton.Text = "X"
 			TextButton.TextColor3 = Color3.new(1, 1, 1)
 			TextButton.Font = Enum.Font.GothamBold
@@ -3511,7 +3511,7 @@ v292:Button({
 
 			TextBox.Size = UDim2.new(1, -20, 0, 34)
 			TextBox.Position = UDim2.new(0, 10, 0, 44)
-			TextBox.BackgroundColor3 = Color3.fromRGB(5, 5, 5)
+			TextBox.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
 			TextBox.Text = ""
 			TextBox.PlaceholderText = "Enter custom Cursor ID, press Enter..."
 			TextBox.TextColor3 = Color3.new(1, 1, 1)
@@ -3520,7 +3520,7 @@ v292:Button({
 			TextBox.TextSize = 13
 			TextBox.ClearTextOnFocus = false
 			Instance.new("UICorner", TextBox).CornerRadius = UDim.new(0, 6)
-			Instance.new("UIStroke", TextBox).Color = Color3.fromRGB(40, 40, 40)
+			Instance.new("UIStroke", TextBox).Color = Color3.fromRGB(80, 80, 80)
 
 			local FocusLost = TextBox.FocusLost
 			local u732 = TextBox
@@ -3534,7 +3534,7 @@ v292:Button({
 					end
 
 					u205:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring("Custom cursor applied — enable ShiftLock to see it!"),
 						Duration = 3,
 						Icon = "bell",
@@ -3563,7 +3563,7 @@ v292:Button({
 
 			TextButton7.Size = UDim2.new(0, 54, 0, 26)
 			TextButton7.Position = UDim2.new(1, -54, 0.5, -13)
-			TextButton7.BackgroundColor3 = u195 and Color3.fromRGB(30, 160, 30) or Color3.fromRGB(40, 5, 20)
+			TextButton7.BackgroundColor3 = u195 and Color3.fromRGB(30, 160, 30) or Color3.fromRGB(80, 20, 20)
 			TextButton7.Text = u195 and "ON" or "OFF"
 			TextButton7.TextColor3 = Color3.new(1, 1, 1)
 			TextButton7.Font = Enum.Font.GothamBold
@@ -3575,14 +3575,14 @@ v292:Button({
 
 			MouseButton1Click6:Connect(function()
 				u195 = not u195
-				u737.BackgroundColor3 = u195 and Color3.fromRGB(30, 160, 30) or Color3.fromRGB(40, 5, 20)
+				u737.BackgroundColor3 = u195 and Color3.fromRGB(30, 160, 30) or Color3.fromRGB(80, 20, 20)
 				u737.Text = u195 and "ON" or "OFF"
 				u206()
 
 				local v933 = "Crosshair Spin: " .. (u195 and "ON" or "OFF")
 
 				u205:Notify({
-					Title = "XenaHub",
+					Title = "RuzHub",
 					Content = tostring(v933),
 					Duration = 3,
 					Icon = "bell",
@@ -3593,7 +3593,7 @@ v292:Button({
 
 			Frame8.Size = UDim2.new(1, -20, 0, 1)
 			Frame8.Position = UDim2.new(0, 10, 0, 120)
-			Frame8.BackgroundColor3 = Color3.fromRGB(25, 25, 25)
+			Frame8.BackgroundColor3 = Color3.fromRGB(60, 60, 60)
 			Frame8.BorderSizePixel = 0
 
 			local ScrollingFrame = Instance.new("ScrollingFrame", Frame)
@@ -3620,7 +3620,7 @@ v292:Button({
 				local TextButton8 = Instance.new("TextButton", ScrollingFrame)
 
 				TextButton8.Size = UDim2.new(0, 128, 0, 110)
-				TextButton8.BackgroundColor3 = v745 and Color3.fromRGB(40, 5, 25) or Color3.fromRGB(8, 8, 8)
+				TextButton8.BackgroundColor3 = v745 and Color3.fromRGB(55, 15, 15) or Color3.fromRGB(20, 20, 20)
 				TextButton8.Text = ""
 				TextButton8.AutoButtonColor = false
 				TextButton8.LayoutOrder = i
@@ -3628,7 +3628,7 @@ v292:Button({
 
 				local UIStroke4 = Instance.new("UIStroke", TextButton8)
 
-				UIStroke4.Color = v745 and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(20, 20, 20)
+				UIStroke4.Color = v745 and Color3.fromRGB(220, 38, 38) or Color3.fromRGB(50, 50, 50)
 				UIStroke4.Thickness = v745 and 1.8 or 1.2
 
 				local ImageLabel = Instance.new("ImageLabel", TextButton8)
@@ -3645,7 +3645,7 @@ v292:Button({
 				TextLabel8.Position = UDim2.new(0, 3, 1, -30)
 				TextLabel8.BackgroundTransparency = 1
 				TextLabel8.Text = v.name .. (v745 and " ✓" or "")
-				TextLabel8.TextColor3 = v745 and Color3.fromRGB(255, 105, 180) or Color3.fromRGB(200, 200, 200)
+				TextLabel8.TextColor3 = v745 and Color3.fromRGB(255, 80, 80) or Color3.fromRGB(200, 200, 200)
 				TextLabel8.Font = Enum.Font.GothamBold
 				TextLabel8.TextSize = 11
 				TextLabel8.TextWrapped = true
@@ -3664,7 +3664,7 @@ v292:Button({
 					local v934 = "Cursor: " .. u751.name .. " — enable ShiftLock to see it!"
 
 					u205:Notify({
-						Title = "XenaHub",
+						Title = "RuzHub",
 						Content = tostring(v934),
 						Duration = 3,
 						Icon = "bell",
@@ -3678,7 +3678,7 @@ v292:Button({
 			return
 		end
 
-		XenaCursorPicker:Destroy()
+		RuzCursorPicker:Destroy()
 	end,
 })
 v292:Divider()
@@ -3740,7 +3740,7 @@ local function u323()
 	end)
 	u173.Visible = true
 	u174:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring("Low Graphics ON — FPS boost active"),
 		Duration = 3,
 		Icon = "bell",
@@ -3797,7 +3797,7 @@ local function u326()
 	v717.Contrast = 0.1
 	v717.Brightness = 0.05
 	u182:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring("High Graphics ON"),
 		Duration = 3,
 		Icon = "bell",
@@ -3820,7 +3820,7 @@ local function u327()
 	end
 
 	u185:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring("High Graphics OFF"),
 		Duration = 3,
 		Icon = "bell",
@@ -3855,7 +3855,7 @@ function t42.Callback()
 		n3 = 70
 		u330.FieldOfView = 70
 		u331:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("FOV reset to 70"),
 			Duration = 3,
 			Icon = "bell",
@@ -3883,7 +3883,7 @@ function t43.Callback()
 	local v828 = ok and "Emotes GUI loaded!" or "Error: " .. tostring(result)
 
 	u333:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v828),
 		Duration = 3,
 		Icon = "bell",
@@ -3905,7 +3905,7 @@ function t44.Callback()
 	local v831 = ok and "Infinite Yield loaded!" or "Error: " .. tostring(result)
 
 	u335:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v831),
 		Duration = 3,
 		Icon = "bell",
@@ -3963,7 +3963,7 @@ function t45.Callback(p74)
 	local v833 = p74 and "Anti-Fling ON" or "Anti-Fling OFF"
 
 	u338:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v833),
 		Duration = 3,
 		Icon = "bell",
@@ -3985,7 +3985,7 @@ function t46.Callback(p75)
 	local v835 = p75 and "Ping Prediction ON" or "Ping Prediction OFF"
 
 	u340:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v835),
 		Duration = 3,
 		Icon = "bell",
@@ -4007,7 +4007,7 @@ function t47.Callback()
 	end, function()
 		n2 = 200
 		u343:Notify({
-			Title = "XenaHub",
+			Title = "RuzHub",
 			Content = tostring("Speed reset to 200"),
 			Duration = 3,
 			Icon = "bell",
@@ -4057,7 +4057,7 @@ function t48.Callback(p78)
 	local v838 = p78 and "ESP ON" or "ESP OFF"
 
 	u347:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v838),
 		Duration = 3,
 		Icon = "bell",
@@ -4157,7 +4157,7 @@ function t54.Callback(p84)
 	local v845 = p84 and "Gun ESP ON" or "Gun ESP OFF"
 
 	u359:Notify({
-		Title = "XenaHub",
+		Title = "RuzHub",
 		Content = tostring(v845),
 		Duration = 3,
 		Icon = "bell",
@@ -4219,9 +4219,9 @@ v227(true)
 v234(true)
 v241(true)
 v18:Notify({
-	Title = "XenaHub",
-	Content = tostring("XenaHub v7.3 ready!"),
+	Title = "RuzHub",
+	Content = tostring("RuzHub v7.3 ready!"),
 	Duration = 3,
 	Icon = "bell",
 })
-print("[XenaHub] v7.3 loaded.")
+print("[RuzHub] v7.3 loaded.")
